@@ -6,7 +6,18 @@ const h3 = { fontFamily: 'Roboto, sans-serif', fontWeight: 400, fontSize: '17px'
 const h4 = { fontFamily: 'Roboto, sans-serif', fontWeight: 400, fontSize: '14px', lineHeight: '20px' };
 
 export const mainTheme = createTheme({
-	palette: {},
+	palette: {
+		primary: {
+			contrastText: '#fff',
+			dark: '#1565c0',
+			light: '#42a5f5',
+			main: '#121212'
+		},
+		text: {
+			primary: '#fff',
+			secondary: '#a7a7a7'
+		}
+	},
 	typography: {
 		fontFamily: [
 			'Roboto',
