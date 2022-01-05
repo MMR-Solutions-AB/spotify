@@ -35,16 +35,16 @@ const Playlist = ({ name, image, songs }) => {
 		>
 			{/* Heror */}
 			<Grid container spacing={2} mb={6}>
-				<Grid item sm={12} lg={2}>
+				<Grid item xs={12} lg={2}>
 					<img src={image} style={{ width: '100%' }} />
 				</Grid>
 				<Grid
 					item
-					sm={12}
+					xs={12}
 					lg={10}
 					sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-end' }}
 				>
-					<Typography variant="subtitle1" sx={{ color: 'text.primary', mb: 6 }}>
+					<Typography variant="subtitle1" sx={{ color: 'text.primary', mb: 2 }}>
 						Playlist
 					</Typography>
 					<Typography variant="h1" sx={{ color: 'text.primary' }}>
@@ -54,20 +54,24 @@ const Playlist = ({ name, image, songs }) => {
 			</Grid>
 			{/* Song list */}
 			<Grid container spacing={2}>
-				<Grid item sm={12} lg={2}>
+				<Grid item xs={12} lg={2}>
 					<Fab color="primary" aria-label="add">
 						<PlayArrowIcon sx={{ color: 'text.primary' }} fontSize="large" />
 					</Fab>
 				</Grid>
-				<Grid sm={12}>
+				<Grid item xs={12}>
 					<TableContainer>
-						<Table>
+						<Table size="small" padding="none">
 							<TableHead>
 								<TableRow>
 									<TableCell>#</TableCell>
 									<TableCell>Title</TableCell>
-									<TableCell align="right">Album</TableCell>
-									<TableCell align="right">Duration</TableCell>
+									<TableCell sx={{ display: { xs: 'none', md: 'table-cell' } }} align="right">
+										Album
+									</TableCell>
+									<TableCell sx={{ display: { xs: 'none', md: 'table-cell' } }} align="right">
+										Duration
+									</TableCell>
 								</TableRow>
 							</TableHead>
 							<TableBody>{renderSongRows()}</TableBody>
