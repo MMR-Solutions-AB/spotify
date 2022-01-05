@@ -22,7 +22,13 @@ function SideNav({ playlists }) {
 	return (
 		<Box
 			className="SideNav"
-			sx={{ display: { xs: 'none', md: 'block' }, background: 'black', height: '100vh', width: 240 }}
+			sx={{
+				position: { xs: 'unset', md: 'fixed' },
+				display: { xs: 'none', md: 'block' },
+				background: 'black',
+				height: '100vh',
+				width: 240
+			}}
 		>
 			<img style={{ marginLeft: 16, marginTop: 24 }} src="/Spotify_Logo.png" width={130} />
 			<Box sx={{ width: '100%', maxWidth: 360, color: 'white' }}>
