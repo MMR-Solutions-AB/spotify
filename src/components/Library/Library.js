@@ -6,7 +6,7 @@ import PlaylistItem from '../PlaylistItem/PlaylistItem';
 function Library({ playlists }) {
 	const renderPlaylistItems = () => {
 		if (!playlists) return 'Loading';
-		return playlists.map((playlist) => <PlaylistItem {...playlist} />);
+		return playlists.map((playlist, i) => <PlaylistItem {...playlist} key={i} />);
 	};
 
 	return (

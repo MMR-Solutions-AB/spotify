@@ -16,7 +16,7 @@ function SideNav({ playlists }) {
 	const renderPlaylists = () => {
 		// Make sure laoding state works
 		if (playlists === null) return 'Loading';
-		return playlists.map((playlist) => <SideNavOption {...playlist} />);
+		return playlists.map((playlist, i) => <SideNavOption {...playlist} key={i} />);
 	};
 
 	return (
