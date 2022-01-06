@@ -3,6 +3,8 @@ import SideNav from '../SideNav/SideNav';
 import Library from '../Library/Library';
 import Playlist from '../Playlist/Playlist';
 import Login from '../Login/Login';
+import MobileNav from '../MobileNav/MobileNav';
+import { Box } from '@mui/system';
 
 function App() {
 	const mockData = [
@@ -24,10 +26,13 @@ function App() {
 
 	return (
 		<div className="App">
-			<Login />
-			<SideNav playlists={mockData} />
-			<Library playlists={mockData} />
-			<Playlist name={'Rock from the 90s'} image="/Justin-Bieber.png" songs={songs} />
+			<Box sx={{ paddingBottom: { xs: '56px', md: '0px' } }}>
+				<Login />
+				<SideNav playlists={mockData} />
+				<Library playlists={mockData} />
+				<Playlist name={'Rock from the 90s'} image="/Justin-Bieber.png" songs={songs} />
+			</Box>
+			<MobileNav />
 		</div>
 	);
 }
