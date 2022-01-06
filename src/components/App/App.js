@@ -1,10 +1,11 @@
 import './App.css';
+import { Box } from '@mui/system';
 import SideNav from '../SideNav/SideNav';
 import Library from '../Library/Library';
 import Playlist from '../Playlist/Playlist';
 import Login from '../Login/Login';
 import MobileNav from '../MobileNav/MobileNav';
-import { Box } from '@mui/system';
+import Player from '../Player/Player';
 
 function App() {
 	const mockData = [
@@ -26,12 +27,13 @@ function App() {
 
 	return (
 		<div className="App">
-			<Box sx={{ paddingBottom: { xs: '56px', md: '0px' } }}>
-				<Login />
+			<Box sx={{ paddingBottom: { xs: '146px', md: '90px' } }}>
+				{/* <Login /> */}
 				<SideNav playlists={mockData} />
 				<Library playlists={mockData} />
 				<Playlist name={'Rock from the 90s'} image="/Justin-Bieber.png" songs={songs} />
 			</Box>
+			<Player image={'/Justin-Bieber.png'} title={'Peaches'} artist={'Justin Bieber'} />
 			<MobileNav />
 		</div>
 	);
