@@ -50,7 +50,7 @@ function SideNav({ playlists }) {
 						</ListItemButton>
 					</ListItem>
 				</List>
-				<Divider sx={{ color: 'white' }} variant="middle" />
+				<Divider sx={{ color: 'white', bgcolor: 'white' }} variant="middle" />
 				<List>{renderPlaylists()}</List>
 			</Box>
 		</Box>
