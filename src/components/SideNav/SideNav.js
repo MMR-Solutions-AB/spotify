@@ -1,4 +1,3 @@
-import './SideNav.css';
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import List from '@mui/material/List';
@@ -10,9 +9,20 @@ import Divider from '@mui/material/Divider';
 import HomeIcon from '@mui/icons-material/Home';
 import SearchIcon from '@mui/icons-material/Search';
 import SideNavOption from '../SideNavOption/SideNavOption';
+import { useHistory } from 'react-router-dom';
+
+const mockPlaylist = [
+	{ name: 'Rock', playlistId: 123, image: '/Justin-Bieber.png' },
+	{ name: 'Pop', playlistId: 646, image: '/Justin-Bieber.png' },
+	{ name: 'Hip hop', playlistId: 834, image: '/Justin-Bieber.png' },
+	{ name: 'X-mas', playlistId: 5503, image: '/Justin-Bieber.png' },
+	{ name: 'Code life', playlistId: 4832, image: '/Justin-Bieber.png' }
+];
 
 // playlists = [{},{}]
-function SideNav({ playlists }) {
+function SideNav({ playlists = mockPlaylist }) {
+	const history = useHistory();
+
 	const renderPlaylists = () => {
 		// Make sure laoding state works
 		if (playlists === null) return 'Loading';
@@ -24,6 +34,8 @@ function SideNav({ playlists }) {
 			className="SideNav"
 			sx={{
 				position: { xs: 'unset', md: 'fixed' },
+				top: 0,
+				left: 0,
 				display: { xs: 'none', md: 'block' },
 				background: 'black',
 				height: '100vh',
@@ -34,7 +46,7 @@ function SideNav({ playlists }) {
 			<Box sx={{ width: '100%', maxWidth: 360, color: 'white' }}>
 				<List>
 					<ListItem disablePadding>
-						<ListItemButton onClick={() => console.log('Go to home')}>
+						<ListItemButton onClick={() => history.push('/')}>
 							<ListItemIcon>
 								<HomeIcon sx={{ color: 'white' }} />
 							</ListItemIcon>
@@ -42,7 +54,7 @@ function SideNav({ playlists }) {
 						</ListItemButton>
 					</ListItem>
 					<ListItem disablePadding>
-						<ListItemButton onClick={() => console.log('Go to search')}>
+						<ListItemButton onClick={() => history.push('/search')}>
 							<ListItemIcon>
 								<SearchIcon sx={{ color: 'white' }} />
 							</ListItemIcon>

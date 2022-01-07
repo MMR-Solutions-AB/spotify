@@ -10,12 +10,22 @@ import {
 	TableCell,
 	TableBody
 } from '@mui/material';
-import { useParams } from 'react-router-dom';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import SongRow from '../SongRow/SongRow';
+import { useParams } from 'react-router-dom';
 
-const Playlist = ({ name, image, songs }) => {
-	// const { playlistId } = useParams();
+const mockSongs = [
+	{ image: '/Justin-Bieber.png', title: 'Holy', artist: 'Justin Bieber', album: 'No clue', duration: 180 },
+	{ image: '/Justin-Bieber.png', title: 'Holy', artist: 'Justin Bieber', album: 'No clue', duration: 154 },
+	{ image: '/Justin-Bieber.png', title: 'Holy', artist: 'Justin Bieber', album: 'No clue', duration: 180 },
+	{ image: '/Justin-Bieber.png', title: 'Holy', artist: 'Justin Bieber', album: 'No clue', duration: 124 },
+	{ image: '/Justin-Bieber.png', title: 'Holy', artist: 'Justin Bieber', album: 'No clue', duration: 180 },
+	{ image: '/Justin-Bieber.png', title: 'Holy', artist: 'Justin Bieber', album: 'No clue', duration: 180 }
+];
+
+const Playlist = ({ name, image, songs = mockSongs }) => {
+	const { playlistId } = useParams();
+	console.log(playlistId);
 
 	// api som använder playlistId
 
