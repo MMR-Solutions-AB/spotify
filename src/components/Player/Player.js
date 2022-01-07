@@ -53,7 +53,7 @@ const Player = ({ image, title, artist }) => {
 			}}
 		>
 			<Grid container spacing={2}>
-				<Grid item xs={4} md={3}>
+				<Grid item xs={4} md={3} sx={{ display: 'flex', alignItems: 'center' }}>
 					<Stack direction="row" spacing={4}>
 						<Avatar
 							alt={title}

@@ -5,6 +5,7 @@ import BottomNavigationAction from '@mui/material/BottomNavigationAction';
 import HomeIcon from '@mui/icons-material/Home';
 import SearchIcon from '@mui/icons-material/Search';
 import ListIcon from '@mui/icons-material/List';
+import { Link } from 'react-router-dom';
 
 const MobileNav = () => {
 	const [value, setValue] = React.useState(0);
@@ -18,9 +19,21 @@ const MobileNav = () => {
 					setValue(newValue);
 				}}
 			>
-				<BottomNavigationAction label="Home" icon={<HomeIcon />} />
-				<BottomNavigationAction label="Search" icon={<SearchIcon />} />
-				<BottomNavigationAction label="Library" icon={<ListIcon />} />
+				<BottomNavigationAction component={Link} to={'/'} value="home" label="Home" icon={<HomeIcon />} />
+				<BottomNavigationAction
+					component={Link}
+					to={'/search'}
+					value="seach"
+					label="Search"
+					icon={<SearchIcon />}
+				/>
+				<BottomNavigationAction
+					component={Link}
+					to={'/playlist'}
+					value="playlist"
+					label="Library"
+					icon={<ListIcon />}
+				/>
 			</BottomNavigation>
 		</Box>
 	);
