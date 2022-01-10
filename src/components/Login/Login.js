@@ -1,4 +1,5 @@
 import { Button, Box } from '@mui/material';
+import { accessUrl } from '../../login-to-spotify';
 
 const Login = ({}) => {
 	return (
@@ -13,7 +14,7 @@ const Login = ({}) => {
 			}}
 		>
 			<img src="/Spotify_Logo.png" style={{ marginBottom: 300, width: '70%', maxWidth: 500 }} />
-			<Button color="primary" variant="contained" size="large">
+			<Button href={accessUrl} color="primary" variant="contained" size="large">
 				Login to spotify
 			</Button>
 		</Box>
