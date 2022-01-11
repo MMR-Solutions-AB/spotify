@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Box, Grid, Typography, Avatar, Stack, Slider, IconButton } from '@mui/material';
 import { VolumeDown, VolumeUp } from '@mui/icons-material';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
@@ -6,13 +6,49 @@ import PauseIcon from '@mui/icons-material/Pause';
 import SkipNextIcon from '@mui/icons-material/SkipNext';
 import SkipPreviousIcon from '@mui/icons-material/SkipPrevious';
 
-const Player = ({ image, title, artist }) => {
+const Player = ({ spotifyApi, deviceId, image, title, artist }) => {
 	const [volume, setVolume] = useState(30);
 	const [playing, setPlaying] = useState(false);
+	const [songInfo, setSongInfo] = useState({});
+
+	const togglePlay = async (isPlaying)=>{
+		if (!isPlaying) {
+			try {
+				const transferPlayback = await spotifyApi.transferMyPlayback([deviceId]);
+				console.log({transferPlayback});
+		
+				const tryToPlay = await spotifyApi.play();
+				console.log({tryToPlay})
+				updateSongInfo();
+			} catch(e) {
+				console.error(e)
+			}
+		} else {
+			const tryToPause = await spotifyApi.pause();
+			console.log({tryToPause})
+		}
+	}
+
+	const updateSongInfo = async ()=>{
+		const currentSong = await spotifyApi.getMyCurrentPlayingTrack();
+		// console.log(currentSong.body)
+		const item = currentSong.body.item;
+		setSongInfo({
+			title: item.name,
+			image: item.album.images[1],
+			artist: item.artists[0].name,
+			duration_s: item.duration_ms / 1000,
+			progress_s: currentSong.body.progress_ms / 1000,
+		})
+	}
 
 	const handleVolumeChange = (event, newValue) => {
 		setVolume(newValue);
 	};
+
+	useEffect(()=>{
+		console.log(deviceId);
+	}, [deviceId])
 
 	const sliderStyle = {
 		color: '#fff',
@@ -56,17 +92,17 @@ const Player = ({ image, title, artist }) => {
 				<Grid item xs={4} md={3} sx={{ display: 'flex', alignItems: 'center' }}>
 					<Stack direction="row" spacing={4}>
 						<Avatar
-							alt={title}
-							src={image}
+							alt={songInfo.title}
+							src={songInfo.image ? songInfo.image.url : ""}
 							variant="square"
 							sx={{ width: 56, height: 56, display: { xs: 'none', md: 'block' } }}
 						/>
 						<Box>
 							<Typography variant="subtitle1" sx={{ color: 'text.primary' }}>
-								{title}
+								{songInfo.title}
 							</Typography>
 							<Typography variant="caption" sx={{ color: 'text.secondary' }}>
-								{artist}
+								{songInfo.artist}
 							</Typography>
 						</Box>
 					</Stack>
@@ -77,20 +113,29 @@ const Player = ({ image, title, artist }) => {
 							<IconButton
 								size="small"
 								sx={{ color: 'white' }}
-								onClick={() => {
+								onClick={async () => {
 									console.log('Skip prev');
+									setPlaying(true);
+									await spotifyApi.skipToPrevious();
+									updateSongInfo();
 								}}
 							>
 								<SkipPreviousIcon />
 							</IconButton>
-							<IconButton size="small" sx={{ color: 'white' }} onClick={() => setPlaying((v) => !v)}>
+							<IconButton size="small" sx={{ color: 'white' }} onClick={() => {
+								setPlaying((v) => !v)
+								togglePlay(playing);
+							}}>
 								{playing ? <PauseIcon fontSize="large" /> : <PlayArrowIcon fontSize="large" />}
 							</IconButton>
 							<IconButton
 								size="small"
 								sx={{ color: 'white' }}
-								onClick={() => {
+								onClick={async () => {
 									console.log('Skip next');
+									setPlaying(true);
+									await spotifyApi.skipToNext();
+									updateSongInfo();
 								}}
 							>
 								<SkipNextIcon />
@@ -98,7 +143,7 @@ const Player = ({ image, title, artist }) => {
 						</Stack>
 						<Stack spacing={2} direction="row" alignItems="center">
 							<Typography variant="body1" sx={{ color: 'text.secondary' }}>
-								2:51
+							{ (songInfo.progress_s / 60).toFixed(0) }:{ (songInfo.progress_s % 60).toFixed(0)  }
 							</Typography>
 							<Slider
 								sx={sliderStyle}
@@ -111,7 +156,7 @@ const Player = ({ image, title, artist }) => {
 								}}
 							/>
 							<Typography variant="body1" sx={{ color: 'text.secondary' }}>
-								3:00
+							{ (songInfo.duration_s / 60).toFixed(0) }:{ (songInfo.duration_s % 60).toFixed(0)  }
 							</Typography>
 						</Stack>
 					</Stack>

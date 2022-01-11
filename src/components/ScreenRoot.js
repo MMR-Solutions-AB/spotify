@@ -12,30 +12,72 @@ import { getAccessToken } from '../login-to-spotify';
 
 const spotifyApi = new SpotifyWebApi();
 
+const setupSpotifyConnect = (token, setDeviceId)=>{
+	const player = new window.Spotify.Player({
+		name: 'Web Playback SDK Quick Start Player',
+		getOAuthToken: cb => { cb(token); },
+		volume: 0.5
+	});
+
+	// Ready
+	player.addListener('ready', ({ device_id }) => {
+		console.log('Ready with Device ID', device_id);
+		setDeviceId(device_id);
+	});
+
+	// Not Ready
+	player.addListener('not_ready', ({ device_id }) => {
+		console.log('Device ID has gone offline', device_id);
+	});
+
+	player.addListener('initialization_error', ({ message }) => {
+		console.error(message);
+	});
+
+	player.addListener('authentication_error', ({ message }) => {
+		console.error(message);
+	});
+
+	player.addListener('account_error', ({ message }) => {
+		console.error(message);
+	});
+
+	player.connect();
+}
+
 const ScreenRoot = () => {
 	const [accessToken, setAccessToken] = useState(null);
 	const [currentUser, setCurrentUser] = useState(null);
 	const [playlists, setPlaylists] = useState(null);
+	const [deviceId, setDeviceId] = useState();
 
 	useEffect(() => {
+		// Set up spotify:
 		const token = getAccessToken();
 		setAccessToken(token);
-		spotifyApi.setAccessToken(accessToken);
+		spotifyApi.setAccessToken(token);
 
-		if (spotifyApi.getAccessToken()) {
+		window.onSpotifyWebPlaybackSDKReady = ()=>{
+			setupSpotifyConnect(token, setDeviceId);
+		}
+
+		if (token) {
 			const getData = async () =>{
-				console.log(accessToken);
+
 				const me = await spotifyApi.getMe();
 				setCurrentUser(me.body);
 
 				const playlists = await spotifyApi.getUserPlaylists();
-				setPlaylists(playlists.body.items)
+				setPlaylists(playlists.body.items);
+				console.log(playlists.body.items)
+
+				const devices = await spotifyApi.getMyDevices();
+				console.log(devices.body);
 			}
 
 			getData();
-			
 		}
-	}, [accessToken]);
+	}, []);
 
 	if (accessToken) {
 		return (
@@ -53,7 +95,7 @@ const ScreenRoot = () => {
 					</Switch>
 					<SideNav playlists={playlists} />
 				</Box>
-				<Player image={'/Justin-Bieber.png'} title={'Peaches'} artist={'Justin Bieber'} />
+				<Player spotifyApi={spotifyApi} deviceId={deviceId} image={'/Justin-Bieber.png'} title={'Peaches'} artist={'Justin Bieber'} />
 				<MobileNav />
 			</Router>
 		);
