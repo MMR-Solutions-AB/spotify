@@ -27,3 +27,30 @@ export const fetchToken = () => {
 		}
 	};
 };
+
+export const fetchUserStart = () => {
+	return { type: actionTypes.FETCH_CURRENT_USER_START };
+};
+
+export const fetchUserFail = (error) => {
+	return { type: actionTypes.FETCH_CURRENT_USER_FAIL, payload: error };
+};
+
+export const fetchUserSuccess = (data) => {
+	return {
+		type: actionTypes.FETCH_CURRENT_USER_SUCCESS,
+		payload: data
+	};
+};
+
+export const fetchUser = (spotifyApi) => {
+	return async (dispatch) => {
+		dispatch(fetchUserStart());
+		try {
+			const me = await spotifyApi.getMe();
+			dispatch(fetchUserSuccess(me));
+		} catch (error) {
+			dispatch(fetchUserFail(error));
+		}
+	};
+};

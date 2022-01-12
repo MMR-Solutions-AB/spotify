@@ -8,6 +8,7 @@ import SideNav from './SideNav/SideNav';
 import MobileNav from './MobileNav/MobileNav';
 import Player from './Player/Player';
 import Login from './Login/Login';
+import { fetchUser } from '../reduxStore/actions/index';
 
 const spotifyApi = new SpotifyWebApi();
 
@@ -48,8 +49,7 @@ const setupSpotifyConnect = (token, setDeviceId) => {
 	player.connect();
 };
 
-const ScreenRoot = ({ token }) => {
-	const [currentUser, setCurrentUser] = useState(null);
+const ScreenRoot = ({ token, fetchUser }) => {
 	const [playlists, setPlaylists] = useState(null);
 	const [deviceId, setDeviceId] = useState();
 
@@ -61,21 +61,18 @@ const ScreenRoot = ({ token }) => {
 			setupSpotifyConnect(token, setDeviceId);
 		};
 
-		if (token) {
-			const getData = async () => {
-				const me = await spotifyApi.getMe();
-				setCurrentUser(me.body);
+		const getData = async () => {
+			fetchUser(spotifyApi);
 
-				const playlists = await spotifyApi.getUserPlaylists();
-				setPlaylists(playlists.body.items);
-				console.log(playlists.body.items);
+			const playlists = await spotifyApi.getUserPlaylists();
+			setPlaylists(playlists.body.items);
+			console.log(playlists.body.items);
 
-				const devices = await spotifyApi.getMyDevices();
-				console.log(devices.body);
-			};
+			const devices = await spotifyApi.getMyDevices();
+			console.log(devices.body);
+		};
 
-			getData();
-		}
+		if (token) getData();
 	}, [token]);
 
 	const LogedIn = () => (
@@ -107,10 +104,16 @@ const ScreenRoot = ({ token }) => {
 	return token ? <LogedIn /> : <Login />;
 };
 
+const mapDispatch = (dispatch) => {
+	return {
+		fetchUser: (data) => dispatch(fetchUser(data))
+	};
+};
+
 const mapState = (state) => {
 	return {
 		token: state.auth.token
 	};
 };
 
-export default connect(mapState)(ScreenRoot);
+export default connect(mapState, mapDispatch)(ScreenRoot);
