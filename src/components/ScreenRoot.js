@@ -23,6 +23,8 @@ const setupSpotifyConnect = (token, setDeviceId)=>{
 	player.addListener('ready', ({ device_id }) => {
 		console.log('Ready with Device ID', device_id);
 		setDeviceId(device_id);
+
+		spotifyApi.transferMyPlayback([device_id]);
 	});
 
 	// Not Ready
@@ -89,7 +91,7 @@ const ScreenRoot = () => {
 								key={i}
 								path={route.path}
 								exact={route.exact}
-								render={(props) => <route.component {...props} />}
+								render={(props) => <route.component spotifyApi={spotifyApi} {...props} />}
 							/>
 						))}
 					</Switch>
