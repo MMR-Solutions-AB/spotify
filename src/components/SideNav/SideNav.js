@@ -20,7 +20,7 @@ const mockPlaylist = [
 ];
 
 // playlists = [{},{}]
-function SideNav({ playlists = mockPlaylist }) {
+function SideNav({ playlists }) {
 	const history = useHistory();
 
 	const renderPlaylists = () => {
