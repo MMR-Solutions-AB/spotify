@@ -6,10 +6,10 @@ import PauseIcon from '@mui/icons-material/Pause';
 import SkipNextIcon from '@mui/icons-material/SkipNext';
 import SkipPreviousIcon from '@mui/icons-material/SkipPrevious';
 import { connect } from 'react-redux';
+import { play, pause } from '../../reduxStore/actions/index';
 
-const Player = ({ spotifyApi, deviceId }) => {
+const Player = ({ spotifyApi, deviceId, play, pause, playing }) => {
 	const [volume, setVolume] = useState(30);
-	const [playing, setPlaying] = useState(false);
 	const [songInfo, setSongInfo] = useState({});
 	const [songProgress, setSongProgress] = useState(0);
 
@@ -50,8 +50,9 @@ const Player = ({ spotifyApi, deviceId }) => {
 		return () => clearInterval(interval);
 	}, [playing, songProgress]);
 
-	const togglePlay = async (isPlaying) => {
-		if (!isPlaying) {
+	const togglePlay = async () => {
+		if (!playing) {
+			play();
 			try {
 				const transferPlayback = await spotifyApi.transferMyPlayback([deviceId]);
 				console.log({ transferPlayback });
@@ -63,6 +64,7 @@ const Player = ({ spotifyApi, deviceId }) => {
 				console.error(e);
 			}
 		} else {
+			pause();
 			const tryToPause = await spotifyApi.pause();
 			console.log({ tryToPause });
 		}
@@ -152,21 +154,14 @@ const Player = ({ spotifyApi, deviceId }) => {
 								sx={{ color: 'white' }}
 								onClick={async () => {
 									console.log('Skip prev');
-									setPlaying(true);
+									play();
 									await spotifyApi.skipToPrevious();
 									updateSongInfo();
 								}}
 							>
 								<SkipPreviousIcon />
 							</IconButton>
-							<IconButton
-								size="small"
-								sx={{ color: 'white' }}
-								onClick={() => {
-									setPlaying((v) => !v);
-									togglePlay(playing);
-								}}
-							>
+							<IconButton size="small" sx={{ color: 'white' }} onClick={togglePlay}>
 								{playing ? <PauseIcon fontSize="large" /> : <PlayArrowIcon fontSize="large" />}
 							</IconButton>
 							<IconButton
@@ -174,7 +169,7 @@ const Player = ({ spotifyApi, deviceId }) => {
 								sx={{ color: 'white' }}
 								onClick={async () => {
 									console.log('Skip next');
-									setPlaying(true);
+									play();
 									await spotifyApi.skipToNext();
 									updateSongInfo();
 								}}
@@ -223,8 +218,16 @@ const Player = ({ spotifyApi, deviceId }) => {
 
 const mapState = (state) => {
 	return {
-		deviceId: state.player.device_id
+		deviceId: state.player.device_id,
+		playing: state.player.playing
 	};
 };
 
-export default connect(mapState)(Player);
+const mapDispatch = (dispatch) => {
+	return {
+		play: () => dispatch(play()),
+		pause: () => dispatch(pause())
+	};
+};
+
+export default connect(mapState, mapDispatch)(Player);
