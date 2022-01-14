@@ -5,8 +5,9 @@ import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import PauseIcon from '@mui/icons-material/Pause';
 import SkipNextIcon from '@mui/icons-material/SkipNext';
 import SkipPreviousIcon from '@mui/icons-material/SkipPrevious';
+import { connect } from 'react-redux';
 
-const Player = ({ spotifyApi, deviceId, image, title, artist }) => {
+const Player = ({ spotifyApi, deviceId }) => {
 	const [volume, setVolume] = useState(30);
 	const [playing, setPlaying] = useState(false);
 	const [songInfo, setSongInfo] = useState({});
@@ -220,4 +221,10 @@ const Player = ({ spotifyApi, deviceId, image, title, artist }) => {
 	);
 };
 
-export default Player;
+const mapState = (state) => {
+	return {
+		deviceId: state.player.device_id
+	};
+};
+
+export default connect(mapState)(Player);
