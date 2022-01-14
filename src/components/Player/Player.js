@@ -12,23 +12,23 @@ const Player = ({ spotifyApi, deviceId, image, title, artist }) => {
 	const [songInfo, setSongInfo] = useState({});
 	const [songProgress, setSongProgress] = useState(0);
 
-	useEffect(()=>{
-		const getStartSongInfo = async ()=>{
-			const recentlyPlayedSongs = await spotifyApi.getMyRecentlyPlayedTracks({limit: 1});
+	useEffect(() => {
+		const getStartSongInfo = async () => {
+			const recentlyPlayedSongs = await spotifyApi.getMyRecentlyPlayedTracks({ limit: 1 });
 			const item = recentlyPlayedSongs.body.items[0].track;
-	
+
 			const duration = item.duration_ms / 1000;
 			const progress = 0;
 			setSongInfo({
 				title: item.name,
 				image: item.album.images[1],
 				artist: item.artists[0].name,
-				duration,
-			})
+				duration
+			});
 			setSongProgress(progress);
-		}
+		};
 		getStartSongInfo();
-	},[])
+	}, []);
 
 	const formatTime = (value) => {
 		const rest = (value % 60).toFixed(0);
@@ -40,36 +40,34 @@ const Player = ({ spotifyApi, deviceId, image, title, artist }) => {
 	useEffect(() => {
 		let interval = null;
 		if (playing) {
-		  interval = setInterval(() => {
-			setSongProgress(songProgress => songProgress + 1);
-		  }, 1000);
+			interval = setInterval(() => {
+				setSongProgress((songProgress) => songProgress + 1);
+			}, 1000);
 		} else if (!playing && songProgress !== 0) {
-		  clearInterval(interval);
+			clearInterval(interval);
 		}
 		return () => clearInterval(interval);
 	}, [playing, songProgress]);
 
-	const togglePlay = async (isPlaying)=>{
+	const togglePlay = async (isPlaying) => {
 		if (!isPlaying) {
 			try {
 				const transferPlayback = await spotifyApi.transferMyPlayback([deviceId]);
-				console.log({transferPlayback});
-		
+				console.log({ transferPlayback });
+
 				const tryToPlay = await spotifyApi.play();
-				console.log({tryToPlay})
+				console.log({ tryToPlay });
 				updateSongInfo();
-			} catch(e) {
-				console.error(e)
+			} catch (e) {
+				console.error(e);
 			}
 		} else {
 			const tryToPause = await spotifyApi.pause();
-			console.log({tryToPause})
+			console.log({ tryToPause });
 		}
-	}
+	};
 
-
-
-	const updateSongInfo = async ()=>{
+	const updateSongInfo = async () => {
 		const currentSong = await spotifyApi.getMyCurrentPlayingTrack();
 		// console.log(currentSong.body)
 		const item = currentSong.body.item;
@@ -79,10 +77,10 @@ const Player = ({ spotifyApi, deviceId, image, title, artist }) => {
 			title: item.name,
 			image: item.album.images[1],
 			artist: item.artists[0].name,
-			duration,
-		})
+			duration
+		});
 		setSongProgress(progress);
-	}
+	};
 
 	const handleVolumeChange = (event, newValue) => {
 		setVolume(newValue);
@@ -131,7 +129,7 @@ const Player = ({ spotifyApi, deviceId, image, title, artist }) => {
 					<Stack direction="row" spacing={4}>
 						<Avatar
 							alt={songInfo.title}
-							src={songInfo.image ? songInfo.image.url : ""}
+							src={songInfo.image ? songInfo.image.url : ''}
 							variant="square"
 							sx={{ width: 56, height: 56, display: { xs: 'none', md: 'block' } }}
 						/>
@@ -160,10 +158,14 @@ const Player = ({ spotifyApi, deviceId, image, title, artist }) => {
 							>
 								<SkipPreviousIcon />
 							</IconButton>
-							<IconButton size="small" sx={{ color: 'white' }} onClick={() => {
-								setPlaying((v) => !v)
-								togglePlay(playing);
-							}}>
+							<IconButton
+								size="small"
+								sx={{ color: 'white' }}
+								onClick={() => {
+									setPlaying((v) => !v);
+									togglePlay(playing);
+								}}
+							>
 								{playing ? <PauseIcon fontSize="large" /> : <PlayArrowIcon fontSize="large" />}
 							</IconButton>
 							<IconButton
@@ -181,7 +183,7 @@ const Player = ({ spotifyApi, deviceId, image, title, artist }) => {
 						</Stack>
 						<Stack spacing={2} direction="row" alignItems="center">
 							<Typography variant="body1" sx={{ color: 'text.secondary' }}>
-							{ formatTime(songProgress) }
+								{formatTime(songProgress)}
 							</Typography>
 							<Slider
 								sx={sliderStyle}
@@ -194,7 +196,7 @@ const Player = ({ spotifyApi, deviceId, image, title, artist }) => {
 								}}
 							/>
 							<Typography variant="body1" sx={{ color: 'text.secondary' }}>
-							{ formatTime(songInfo.duration) }
+								{formatTime(songInfo.duration)}
 							</Typography>
 						</Stack>
 					</Stack>
