@@ -6,21 +6,20 @@ import PauseIcon from '@mui/icons-material/Pause';
 import SkipNextIcon from '@mui/icons-material/SkipNext';
 import SkipPreviousIcon from '@mui/icons-material/SkipPrevious';
 import { connect } from 'react-redux';
-import { play, pause, updateSongInfo, updateSongInfoStart } from '../../reduxStore/actions/index';
+import { pause, updateSongInfoStart, playNewSong } from '../../reduxStore/actions/index';
 
 const Player = ({
 	spotifyApi,
 	deviceId,
-	play,
 	pause,
 	playing,
-	updateSongInfo,
 	updateSongInfoStart,
 	title,
 	image,
 	artist,
 	duration,
-	progress
+	progress,
+	playNewSong
 }) => {
 	const [volume, setVolume] = useState(30);
 	const [songProgress, setSongProgress] = useState(progress);
@@ -50,22 +49,15 @@ const Player = ({
 
 	const togglePlay = async () => {
 		if (!playing) {
-			play();
 			try {
-				const transferPlayback = await spotifyApi.transferMyPlayback([deviceId]);
-				console.log({ transferPlayback });
-
-				const tryToPlay = await spotifyApi.play();
-				console.log({ tryToPlay });
-
-				updateSongInfo(spotifyApi);
+				await spotifyApi.transferMyPlayback([deviceId]);
+				playNewSong(spotifyApi);
 			} catch (e) {
 				console.error(e);
 			}
 		} else {
 			pause();
-			const tryToPause = await spotifyApi.pause();
-			console.log({ tryToPause });
+			await spotifyApi.pause();
 		}
 	};
 
@@ -75,14 +67,12 @@ const Player = ({
 
 	const handeOnSkipNext = async () => {
 		await spotifyApi.skipToNext();
-		updateSongInfo(spotifyApi);
-		play();
+		playNewSong(spotifyApi);
 	};
 
 	const handeOnSkipPrev = async () => {
 		await spotifyApi.skipToPrevious();
-		updateSongInfo(spotifyApi);
-		play();
+		playNewSong(spotifyApi);
 	};
 
 	const sliderStyle = {
@@ -209,10 +199,9 @@ const mapState = (state) => {
 
 const mapDispatch = (dispatch) => {
 	return {
-		play: () => dispatch(play()),
 		pause: () => dispatch(pause()),
-		updateSongInfo: (spotifyApi) => dispatch(updateSongInfo(spotifyApi)),
-		updateSongInfoStart: (spotifyApi) => dispatch(updateSongInfoStart(spotifyApi))
+		updateSongInfoStart: (spotifyApi) => dispatch(updateSongInfoStart(spotifyApi)),
+		playNewSong: (spotifyApi) => dispatch(playNewSong(spotifyApi))
 	};
 };
 

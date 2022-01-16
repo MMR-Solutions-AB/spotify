@@ -27,21 +27,25 @@ export const updatePlayerSuccess = (data) => {
 	};
 };
 
+export const playNewSong = (spotifyApi, song = {}) => {
+	return async (dispatch) => {
+		dispatch(updatePlayerStart());
+		try {
+			await spotifyApi.play(song);
+			const data = await getMyCurrentPlayingTrack(spotifyApi);
+			dispatch(updatePlayerSuccess(data));
+			dispatch(play());
+		} catch (error) {
+			dispatch(updatePlayerFail(error));
+		}
+	};
+};
+
 export const updateSongInfo = (spotifyApi) => {
 	return async (dispatch) => {
 		dispatch(updatePlayerStart());
 		try {
-			const currentSong = await spotifyApi.getMyCurrentPlayingTrack();
-			const item = currentSong.body.item;
-			const duration = item.duration_ms / 1000;
-			const progress = currentSong.body.progress_ms / 1000;
-			const data = {
-				title: item.name,
-				image: item.album.images[1],
-				artist: item.artists[0].name,
-				duration,
-				progress
-			};
+			const data = await getMyCurrentPlayingTrack(spotifyApi);
 			dispatch(updatePlayerSuccess(data));
 		} catch (error) {
 			dispatch(updatePlayerFail(error));
@@ -67,5 +71,20 @@ export const updateSongInfoStart = (spotifyApi) => {
 		} catch (error) {
 			dispatch(updatePlayerFail(error));
 		}
+	};
+};
+
+const getMyCurrentPlayingTrack = async (spotifyApi) => {
+	const currentSong = await spotifyApi.getMyCurrentPlayingTrack();
+	const item = currentSong.body.item;
+	const duration = item.duration_ms / 1000;
+	const progress = currentSong.body.progress_ms / 1000;
+	console.log({ progress });
+	return {
+		title: item.name,
+		image: item.album.images[1],
+		artist: item.artists[0].name,
+		duration,
+		progress
 	};
 };

@@ -1,8 +1,8 @@
 import { TableCell, TableRow, Avatar, Typography, Skeleton, Box } from '@mui/material';
 import { connect } from 'react-redux';
-import { play, updateSongInfo } from '../../reduxStore/actions/index';
+import { playNewSong } from '../../reduxStore/actions/index';
 
-const SongRow = ({ spotifyApi, playlistId, track, index, loading, play, updateSongInfo }) => {
+const SongRow = ({ spotifyApi, playlistId, track, index, loading, playNewSong }) => {
 	const image = track.album.images[2].url;
 	const title = track.name;
 	const artist = track.artists[0].name;
@@ -31,14 +31,13 @@ const SongRow = ({ spotifyApi, playlistId, track, index, loading, play, updateSo
 	};
 
 	const onRowClick = async () => {
-		await spotifyApi.play({
+		const song = {
 			context_uri: `spotify:playlist:${playlistId}`,
 			offset: {
 				position: index
 			}
-		});
-		play();
-		updateSongInfo(spotifyApi);
+		};
+		playNewSong(spotifyApi, song);
 	};
 
 	const rowStyle = {
@@ -65,8 +64,7 @@ const SongRow = ({ spotifyApi, playlistId, track, index, loading, play, updateSo
 
 const mapDispatch = (dispatch) => {
 	return {
-		play: () => dispatch(play()),
-		updateSongInfo: (spotifyApi) => dispatch(updateSongInfo(spotifyApi))
+		playNewSong: (spotifyApi, song) => dispatch(playNewSong(spotifyApi, song))
 	};
 };
 
