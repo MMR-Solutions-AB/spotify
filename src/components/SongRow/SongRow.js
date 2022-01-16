@@ -1,8 +1,8 @@
 import { TableCell, TableRow, Avatar, Typography, Skeleton, Box } from '@mui/material';
 import { connect } from 'react-redux';
-import { play } from '../../reduxStore/actions/index';
+import { play, updateSongInfo } from '../../reduxStore/actions/index';
 
-const SongRow = ({ spotifyApi, playlistId, track, index, loading, play }) => {
+const SongRow = ({ spotifyApi, playlistId, track, index, loading, play, updateSongInfo }) => {
 	const image = track.album.images[2].url;
 	const title = track.name;
 	const artist = track.artists[0].name;
@@ -38,21 +38,19 @@ const SongRow = ({ spotifyApi, playlistId, track, index, loading, play }) => {
 			}
 		});
 		play();
+		updateSongInfo(spotifyApi);
+	};
+
+	const rowStyle = {
+		'& td': { border: 0 },
+		cursor: 'pointer',
+		'&:hover': {
+			backgroundColor: '#d8d8d821 !important'
+		}
 	};
 
 	return (
-		<TableRow
-			key={index}
-			sx={{
-				'& td': { border: 0 },
-				cursor: 'pointer',
-				'&:hover': {
-					backgroundColor: '#d8d8d821 !important'
-				}
-			}}
-			onClick={() => onRowClick()}
-			hover={true}
-		>
+		<TableRow key={index} sx={rowStyle} onClick={() => onRowClick()} hover={true}>
 			<TableCell>{loading ? <Skeleton variant="rectangular" width={20} height={30} /> : index + 1}</TableCell>
 			<TableCell>{loading ? <Skeleton variant="rectangular" width={50} height={50} /> : <Title />}</TableCell>
 			<TableCell align="right" sx={{ color: 'text.secondary', display: { xs: 'none', md: 'table-cell' } }}>
@@ -67,7 +65,8 @@ const SongRow = ({ spotifyApi, playlistId, track, index, loading, play }) => {
 
 const mapDispatch = (dispatch) => {
 	return {
-		play: () => dispatch(play())
+		play: () => dispatch(play()),
+		updateSongInfo: (spotifyApi) => dispatch(updateSongInfo(spotifyApi))
 	};
 };
 
