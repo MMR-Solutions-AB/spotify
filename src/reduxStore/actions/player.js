@@ -12,6 +12,10 @@ export const pause = () => {
 	return { type: actionTypes.PAUSE };
 };
 
+export const setProgress = (progress) => {
+	return { type: actionTypes.SET_PROGRESS, payload: progress };
+};
+
 export const updatePlayerStart = () => {
 	return { type: actionTypes.UPDATE_PLAYER_START };
 };
@@ -79,7 +83,6 @@ const getMyCurrentPlayingTrack = async (spotifyApi) => {
 	const item = currentSong.body.item;
 	const duration = item.duration_ms / 1000;
 	const progress = currentSong.body.progress_ms / 1000;
-	console.log({ progress });
 	return {
 		title: item.name,
 		image: item.album.images[1],

@@ -6,7 +6,7 @@ import PauseIcon from '@mui/icons-material/Pause';
 import SkipNextIcon from '@mui/icons-material/SkipNext';
 import SkipPreviousIcon from '@mui/icons-material/SkipPrevious';
 import { connect } from 'react-redux';
-import { pause, updateSongInfoStart, playNewSong } from '../../reduxStore/actions/index';
+import { pause, updateSongInfoStart, playNewSong, setProgress } from '../../reduxStore/actions/index';
 
 const Player = ({
 	spotifyApi,
@@ -19,10 +19,10 @@ const Player = ({
 	artist,
 	duration,
 	progress,
-	playNewSong
+	playNewSong,
+	setProgress
 }) => {
 	const [volume, setVolume] = useState(30);
-	const [songProgress, setSongProgress] = useState(progress);
 
 	useEffect(() => {
 		updateSongInfoStart(spotifyApi);
@@ -39,13 +39,13 @@ const Player = ({
 		let interval = null;
 		if (playing) {
 			interval = setInterval(() => {
-				setSongProgress((songProgress) => songProgress + 1);
+				setProgress(progress + 1);
 			}, 1000);
-		} else if (!playing && songProgress !== 0) {
+		} else if (!playing && progress !== 0) {
 			clearInterval(interval);
 		}
 		return () => clearInterval(interval);
-	}, [playing, songProgress]);
+	}, [playing, progress]);
 
 	const togglePlay = async () => {
 		if (!playing) {
@@ -147,12 +147,12 @@ const Player = ({
 						</Stack>
 						<Stack spacing={2} direction="row" alignItems="center">
 							<Typography variant="body1" sx={{ color: 'text.secondary' }}>
-								{formatTime(songProgress)}
+								{formatTime(progress)}
 							</Typography>
 							<Slider
 								sx={sliderStyle}
 								size="medium"
-								value={songProgress}
+								value={progress}
 								aria-label="Default"
 								valueLabelDisplay="auto"
 								onChange={() => {
@@ -201,7 +201,8 @@ const mapDispatch = (dispatch) => {
 	return {
 		pause: () => dispatch(pause()),
 		updateSongInfoStart: (spotifyApi) => dispatch(updateSongInfoStart(spotifyApi)),
-		playNewSong: (spotifyApi) => dispatch(playNewSong(spotifyApi))
+		playNewSong: (spotifyApi) => dispatch(playNewSong(spotifyApi)),
+		setProgress: (progress) => dispatch(setProgress(progress))
 	};
 };
 

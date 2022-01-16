@@ -12,6 +12,7 @@ export const FETCH_PLAYLIST_START = 'FETCH_PLAYLIST_START';
 
 export const PLAY = 'PLAY';
 export const PAUSE = 'PAUSE';
+export const SET_PROGRESS = 'SET_PROGRESS';
 export const ADD_DEVICE_ID = 'ADD_DEVICE_ID';
 export const UPDATE_PLAYER_START = 'UPDATE_PLAYER_START';
 export const UPDATE_PLAYER_FAIL = 'UPDATE_PLAYER_FAIL';
