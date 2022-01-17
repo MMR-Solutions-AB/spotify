@@ -4,7 +4,12 @@ const initialState = {
 	loading: false,
 	error: null,
 	device_id: null,
-	playing: false
+	playing: false,
+	title: null,
+	image: null,
+	artist: null,
+	duration: null,
+	progress: null
 };
 
 const reducer = (state = initialState, action) => {
@@ -23,6 +28,30 @@ const reducer = (state = initialState, action) => {
 			return {
 				...state,
 				playing: false
+			};
+		case actionTypes.SET_PROGRESS:
+			return {
+				...state,
+				progress: action.payload
+			};
+		case actionTypes.UPDATE_PLAYER_START:
+			return {
+				...state,
+				loading: true,
+				error: null
+			};
+		case actionTypes.UPDATE_PLAYER_FAIL:
+			return {
+				...state,
+				loading: false,
+				error: action.payload
+			};
+		case actionTypes.UPDATE_PLAYER_SUCCESS:
+			return {
+				...state,
+				loading: false,
+				error: null,
+				...action.payload
 			};
 		default:
 			return state;

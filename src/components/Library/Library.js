@@ -2,16 +2,9 @@ import { Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import List from '@mui/material/List';
 import PlaylistItem from '../PlaylistItem/PlaylistItem';
+import { connect } from 'react-redux';
 
-const mockPlaylist = [
-	{ name: 'Rock', playlistId: 123, image: '/Justin-Bieber.png' },
-	{ name: 'Pop', playlistId: 646, image: '/Justin-Bieber.png' },
-	{ name: 'Hip hop', playlistId: 834, image: '/Justin-Bieber.png' },
-	{ name: 'X-mas', playlistId: 5503, image: '/Justin-Bieber.png' },
-	{ name: 'Code life', playlistId: 4832, image: '/Justin-Bieber.png' }
-];
-
-function Library({ playlists = mockPlaylist }) {
+function Library({ playlists }) {
 	const renderPlaylistItems = () => {
 		if (!playlists) return 'Loading';
 		return playlists.map((playlist, i) => <PlaylistItem {...playlist} key={i} />);
@@ -30,4 +23,8 @@ function Library({ playlists = mockPlaylist }) {
 	);
 }
 
-export default Library;
+const mapState = (state) => {
+	return { playlists: state.playlist.items };
+};
+
+export default connect(mapState)(Library);
