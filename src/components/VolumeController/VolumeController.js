@@ -5,7 +5,8 @@ import debounce from 'lodash.debounce';
 import VolumeOffIcon from '@mui/icons-material/VolumeOff';
 
 const VolumeController = ({ spotifyApi }) => {
-	const [volume, setVolume] = useState(90);
+	const defaultVolume = 50;
+	const [volume, setVolume] = useState(defaultVolume);
 
 	const handleVolumeChange = async (e, v) => {
 		setVolume(v);
@@ -21,6 +22,7 @@ const VolumeController = ({ spotifyApi }) => {
 	);
 
 	useEffect(() => {
+		spotifyApi.setVolume(defaultVolume);
 		return () => {
 			debauncedApiCall.cancel();
 		};
@@ -30,7 +32,7 @@ const VolumeController = ({ spotifyApi }) => {
 		<Box sx={{ width: 200 }}>
 			<Stack spacing={2} direction="row" alignItems="center">
 				{volume === 0 ? <VolumeOffIcon /> : <VolumeDown />}
-				<Slider aria-label="Volume" value={volume} onChange={handleVolumeChange} />
+				<Slider min={0} max={100} step={1} aria-label="Volume" value={volume} onChange={handleVolumeChange} />
 				<VolumeUp />
 			</Stack>
 		</Box>
