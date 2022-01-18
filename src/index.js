@@ -7,10 +7,7 @@ import { mainTheme } from './style/material-themes';
 import configureStore from './reduxStore/configureStore';
 import { Provider } from 'react-redux';
 
-console.log(mainTheme);
-
 const store = configureStore();
-console.log(store);
 
 ReactDOM.render(
 	<React.StrictMode>
