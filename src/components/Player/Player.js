@@ -6,22 +6,22 @@ import PauseIcon from '@mui/icons-material/Pause';
 import SkipNextIcon from '@mui/icons-material/SkipNext';
 import SkipPreviousIcon from '@mui/icons-material/SkipPrevious';
 import { connect } from 'react-redux';
-import { play, pause, updateSongInfo, updateSongInfoStart } from '../../reduxStore/actions/index';
+import { pause, updateSongInfoStart, playNewSong, setProgress } from '../../reduxStore/actions/index';
 
 const Player = ({
 	spotifyApi,
 	deviceId,
-	play,
 	pause,
 	playing,
-	updateSongInfo,
 	updateSongInfoStart,
 	title,
 	image,
 	artist,
 	duration,
 	progress,
-	loading
+	loading,
+	playNewSong,
+	setProgress
 }) => {
 	const [volume, setVolume] = useState(30);
 
@@ -41,6 +41,7 @@ const Player = ({
 		if (playing) {
 			interval = setInterval(() => {
 				console.log('Progress the song');
+				setProgress(progress + 1);
 			}, 1000);
 		} else if (!playing && progress !== 0) {
 			clearInterval(interval);
@@ -52,11 +53,9 @@ const Player = ({
 		if (loading) return;
 
 		if (!playing) {
-			play();
 			try {
 				await spotifyApi.transferMyPlayback([deviceId]);
-				await spotifyApi.play();
-				updateSongInfo(spotifyApi);
+				playNewSong(spotifyApi);
 			} catch (e) {
 				console.error(e);
 			}
@@ -74,16 +73,14 @@ const Player = ({
 
 	const handeOnSkipPrev = async () => {
 		if (loading) return;
-		play();
 		await spotifyApi.skipToPrevious();
-		updateSongInfo(spotifyApi);
+		playNewSong(spotifyApi);
 	};
 
 	const handleOnSkipNext = async () => {
 		if (loading) return;
-		play();
 		await spotifyApi.skipToNext();
-		updateSongInfo(spotifyApi);
+		playNewSong(spotifyApi);
 	};
 
 	const sliderStyle = {
@@ -211,10 +208,10 @@ const mapState = (state) => {
 
 const mapDispatch = (dispatch) => {
 	return {
-		play: () => dispatch(play()),
 		pause: () => dispatch(pause()),
-		updateSongInfo: (api) => dispatch(updateSongInfo(api)),
-		updateSongInfoStart: (api) => dispatch(updateSongInfoStart(api))
+		updateSongInfoStart: (api) => dispatch(updateSongInfoStart(api)),
+		playNewSong: (api) => dispatch(playNewSong(api)),
+		setProgress: (progress) => dispatch(setProgress(progress))
 	};
 };
 

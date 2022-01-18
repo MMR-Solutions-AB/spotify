@@ -29,6 +29,11 @@ const reducer = (state = initialState, action) => {
 				...state,
 				playing: false
 			};
+		case actionTypes.SET_PROGRESS:
+			return {
+				...state,
+				progress: action.payload
+			};
 		// API calls
 		case actionTypes.UPDATE_PLAYER_START:
 			return {

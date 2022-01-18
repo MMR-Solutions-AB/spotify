@@ -10,6 +10,7 @@ import { Provider } from 'react-redux';
 console.log(mainTheme);
 
 const store = configureStore();
+console.log(store);
 
 ReactDOM.render(
 	<React.StrictMode>
