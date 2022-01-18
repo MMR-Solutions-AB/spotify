@@ -14,40 +14,34 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import SongRow from '../SongRow/SongRow';
+import { connect } from 'react-redux';
 
-const mockSongs = [
-	{ image: '/Justin-Bieber.png', title: 'Holy', artist: 'Justin Bieber', album: 'No clue', duration: 180 },
-	{ image: '/Justin-Bieber.png', title: 'Holy', artist: 'Justin Bieber', album: 'No clue', duration: 154 },
-	{ image: '/Justin-Bieber.png', title: 'Holy', artist: 'Justin Bieber', album: 'No clue', duration: 180 },
-	{ image: '/Justin-Bieber.png', title: 'Holy', artist: 'Justin Bieber', album: 'No clue', duration: 124 },
-	{ image: '/Justin-Bieber.png', title: 'Holy', artist: 'Justin Bieber', album: 'No clue', duration: 180 },
-	{ image: '/Justin-Bieber.png', title: 'Holy', artist: 'Justin Bieber', album: 'No clue', duration: 180 }
-];
-
-const Playlist = ({spotifyApi }) => {
+const Playlist = ({ spotifyApi, loading }) => {
 	const { playlistId } = useParams();
 	const [playlistInfo, setPlaylistInfo] = useState();
 	const [songs, setSongs] = useState([]);
 
-	useEffect(()=>{
-		const getData = async ()=>{
+	useEffect(() => {
+		const getData = async () => {
 			const playlistDetails = await spotifyApi.getPlaylist(playlistId);
 			setPlaylistInfo({
 				image: playlistDetails.body.images[0].url,
 				name: playlistDetails.body.name
-			})
+			});
 
 			const allSongs = await spotifyApi.getPlaylistTracks(playlistId);
 			setSongs(allSongs.body.items);
-		}
+		};
 		getData();
-	}, [playlistId])
+	}, [playlistId]);
 
 	// api som använder playlistId
 
 	const renderSongRows = () => {
-		if (!songs) return [1, 2, 3, 4, 5, 6].map((e, i) => <SongRow loading={true} key={i} />);
-		return songs.map((song, i) => <SongRow spotifyApi={spotifyApi} playlistId={playlistId} {...song} key={i} index={i} />);
+		if (loading) return [1, 2, 3, 4, 5, 6].map((e, i) => <SongRow loading={true} key={i} index={i} />);
+		return songs.map((song, i) => (
+			<SongRow spotifyApi={spotifyApi} playlistId={playlistId} {...song} key={i} index={i} />
+		));
 	};
 
 	return (
@@ -62,7 +56,7 @@ const Playlist = ({spotifyApi }) => {
 			{/* Hero */}
 			<Grid container spacing={2} mb={6}>
 				<Grid item xs={12} lg={2}>
-					<img src={playlistInfo ? playlistInfo.image : ""} style={{ width: '100%' }} />
+					<img src={playlistInfo ? playlistInfo.image : ''} style={{ width: '100%' }} />
 				</Grid>
 				<Grid
 					item
@@ -74,7 +68,7 @@ const Playlist = ({spotifyApi }) => {
 						Playlist
 					</Typography>
 					<Typography variant="h1" sx={{ color: 'text.primary' }}>
-						{playlistInfo ? playlistInfo.name : ""}
+						{playlistInfo ? playlistInfo.name : ''}
 					</Typography>
 				</Grid>
 			</Grid>
@@ -108,4 +102,11 @@ const Playlist = ({spotifyApi }) => {
 		</Box>
 	);
 };
-export default Playlist;
+
+const mapState = (state) => {
+	return {
+		loading: state.playlist.loading
+	};
+};
+
+export default connect(mapState)(Playlist);
