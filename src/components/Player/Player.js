@@ -7,6 +7,7 @@ import SkipNextIcon from '@mui/icons-material/SkipNext';
 import SkipPreviousIcon from '@mui/icons-material/SkipPrevious';
 import { connect } from 'react-redux';
 import { pause, updateSongInfoStart, playNewSong, setProgress } from '../../reduxStore/actions/index';
+import VolumeController from '../VolumeController/VolumeController';
 
 const Player = ({
 	spotifyApi,
@@ -23,8 +24,6 @@ const Player = ({
 	playNewSong,
 	setProgress
 }) => {
-	const [volume, setVolume] = useState(30);
-
 	useEffect(() => {
 		updateSongInfoStart(spotifyApi);
 	}, []);
@@ -40,7 +39,6 @@ const Player = ({
 		let interval = null;
 		if (playing) {
 			interval = setInterval(() => {
-				console.log('Progress the song');
 				setProgress(progress + 1);
 			}, 1000);
 		} else if (!playing && progress !== 0) {
@@ -61,14 +59,8 @@ const Player = ({
 			}
 		} else {
 			pause();
-			const tryToPause = await spotifyApi.pause();
-			console.log({ tryToPause });
+			await spotifyApi.pause();
 		}
-	};
-
-	const handleVolumeChange = (event, newValue) => {
-		if (loading) return;
-		setVolume(newValue);
 	};
 
 	const handeOnSkipPrev = async () => {
@@ -179,13 +171,7 @@ const Player = ({
 					md={3}
 					sx={{ display: { xs: 'none', md: 'flex' }, justifyContent: 'end', alignItems: 'center' }}
 				>
-					<Box sx={{ width: 200 }}>
-						<Stack spacing={2} direction="row" alignItems="center">
-							<VolumeDown />
-							<Slider aria-label="Volume" value={volume} onChange={handleVolumeChange} />
-							<VolumeUp />
-						</Stack>
-					</Box>
+					<VolumeController spotifyApi={spotifyApi} />
 				</Grid>
 			</Grid>
 		</Box>
