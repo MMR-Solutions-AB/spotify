@@ -1,12 +1,13 @@
-import { useState, useEffect } from 'react';
-import { Box, Grid, Typography, Avatar, Stack, Slider, IconButton } from '@mui/material';
-import { VolumeDown, VolumeUp } from '@mui/icons-material';
+import { useEffect } from 'react';
+import { Box, Grid, Typography, Avatar, Stack, IconButton } from '@mui/material';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import PauseIcon from '@mui/icons-material/Pause';
 import SkipNextIcon from '@mui/icons-material/SkipNext';
 import SkipPreviousIcon from '@mui/icons-material/SkipPrevious';
 import { connect } from 'react-redux';
-import { pause, updateSongInfoStart, playNewSong, setProgress } from '../../reduxStore/actions/index';
+import { pause, updateSongInfoStart, playNewSong } from '../../reduxStore/actions/index';
+import VolumeController from '../VolumeController/VolumeController';
+import SongProgress from '../SongProgress/SongProgress';
 
 const Player = ({
 	spotifyApi,
@@ -17,37 +18,12 @@ const Player = ({
 	title,
 	image,
 	artist,
-	duration,
-	progress,
 	loading,
-	playNewSong,
-	setProgress
+	playNewSong
 }) => {
-	const [volume, setVolume] = useState(30);
-
 	useEffect(() => {
 		updateSongInfoStart(spotifyApi);
 	}, []);
-
-	const formatTime = (value) => {
-		const rest = (value % 60).toFixed(0);
-		const min = Math.floor(value / 60);
-		const seconds = rest < 10 ? `0${rest}` : rest;
-		return `${min}:${seconds}`;
-	};
-
-	useEffect(() => {
-		let interval = null;
-		if (playing) {
-			interval = setInterval(() => {
-				console.log('Progress the song');
-				setProgress(progress + 1);
-			}, 1000);
-		} else if (!playing && progress !== 0) {
-			clearInterval(interval);
-		}
-		return () => clearInterval(interval);
-	}, [playing, progress]);
 
 	const togglePlay = async () => {
 		if (loading) return;
@@ -61,14 +37,8 @@ const Player = ({
 			}
 		} else {
 			pause();
-			const tryToPause = await spotifyApi.pause();
-			console.log({ tryToPause });
+			await spotifyApi.pause();
 		}
-	};
-
-	const handleVolumeChange = (event, newValue) => {
-		if (loading) return;
-		setVolume(newValue);
 	};
 
 	const handeOnSkipPrev = async () => {
@@ -83,44 +53,19 @@ const Player = ({
 		playNewSong(spotifyApi);
 	};
 
-	const sliderStyle = {
-		color: '#fff',
-		height: 4,
-		width: { xs: 100, md: 250 },
-		'& .MuiSlider-thumb': {
-			width: 8,
-			height: 8,
-			transition: '0.3s cubic-bezier(.47,1.64,.41,.8)',
-			'&:before': {
-				boxShadow: '0 2px 12px 0 rgba(0,0,0,0.4)'
-			},
-			'&:hover, &.Mui-focusVisible': {
-				boxShadow: `0px 0px 0px 8px 'rgb(0 0 0 / 16%)`
-			},
-			'&.Mui-active': {
-				width: 20,
-				height: 20
-			}
-		},
-		'& .MuiSlider-rail': {
-			opacity: 0.28
-		}
+	const boxStyle = {
+		bgcolor: 'background.paper',
+		height: 90,
+		width: '100%',
+		position: 'fixed',
+		bottom: { xs: 56, md: 0 },
+		left: 0,
+		right: 0,
+		boxSizing: 'border-box'
 	};
 
 	return (
-		<Box
-			p={1}
-			sx={{
-				bgcolor: 'background.paper',
-				height: 90,
-				width: '100%',
-				position: 'fixed',
-				bottom: { xs: 56, md: 0 },
-				left: 0,
-				right: 0,
-				boxSizing: 'border-box'
-			}}
-		>
+		<Box p={1} sx={boxStyle}>
 			<Grid container spacing={2}>
 				<Grid item xs={4} md={3} sx={{ display: 'flex', alignItems: 'center' }}>
 					<Stack direction="row" spacing={4}>
@@ -153,24 +98,7 @@ const Player = ({
 								<SkipNextIcon />
 							</IconButton>
 						</Stack>
-						<Stack spacing={2} direction="row" alignItems="center">
-							<Typography variant="body1" sx={{ color: 'text.secondary' }}>
-								{formatTime(progress)}
-							</Typography>
-							<Slider
-								sx={sliderStyle}
-								size="medium"
-								value={progress}
-								aria-label="Default"
-								valueLabelDisplay="auto"
-								onChange={() => {
-									console.log('Move through the song');
-								}}
-							/>
-							<Typography variant="body1" sx={{ color: 'text.secondary' }}>
-								{formatTime(duration)}
-							</Typography>
-						</Stack>
+						<SongProgress spotifyApi={spotifyApi} />
 					</Stack>
 				</Grid>
 				<Grid
@@ -179,13 +107,7 @@ const Player = ({
 					md={3}
 					sx={{ display: { xs: 'none', md: 'flex' }, justifyContent: 'end', alignItems: 'center' }}
 				>
-					<Box sx={{ width: 200 }}>
-						<Stack spacing={2} direction="row" alignItems="center">
-							<VolumeDown />
-							<Slider aria-label="Volume" value={volume} onChange={handleVolumeChange} />
-							<VolumeUp />
-						</Stack>
-					</Box>
+					<VolumeController spotifyApi={spotifyApi} />
 				</Grid>
 			</Grid>
 		</Box>
@@ -193,15 +115,13 @@ const Player = ({
 };
 
 const mapState = (state) => {
-	const { title, image, artist, duration, progress, device_id, playing, loading } = state.player;
+	const { title, image, artist, device_id, playing, loading } = state.player;
 	return {
 		deviceId: device_id,
 		playing,
 		title,
 		image,
 		artist,
-		duration,
-		progress,
 		loading
 	};
 };
@@ -210,8 +130,7 @@ const mapDispatch = (dispatch) => {
 	return {
 		pause: () => dispatch(pause()),
 		updateSongInfoStart: (api) => dispatch(updateSongInfoStart(api)),
-		playNewSong: (api) => dispatch(playNewSong(api)),
-		setProgress: (progress) => dispatch(setProgress(progress))
+		playNewSong: (api) => dispatch(playNewSong(api))
 	};
 };
 

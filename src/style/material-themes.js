@@ -1,9 +1,4 @@
-import { createTheme } from '@mui/material/styles';
-
-const h1 = { fontFamily: 'Roboto, sans-serif', fontWeight: 700, fontSize: '60px', lineHeight: '70px' };
-const h2 = { fontFamily: 'Roboto, sans-serif', fontWeight: 500, fontSize: '20px', lineHeight: '24px' };
-const h3 = { fontFamily: 'Roboto, sans-serif', fontWeight: 400, fontSize: '17px', lineHeight: '20px' };
-const h4 = { fontFamily: 'Roboto, sans-serif', fontWeight: 400, fontSize: '14px', lineHeight: '20px' };
+import { createTheme, responsiveFontSizes } from '@mui/material/styles';
 
 const backgrounds = {
 	base: '#121212',
@@ -31,7 +26,7 @@ const text = {
 	announcement: '#3d91f4'
 };
 
-export const mainTheme = createTheme({
+const mainTheme = createTheme({
 	palette: {
 		background: {
 			paper: backgrounds.base,
@@ -58,10 +53,8 @@ export const mainTheme = createTheme({
 			'"Apple Color Emoji"',
 			'"Segoe UI Emoji"',
 			'"Segoe UI Symbol"'
-		].join(','),
-		h1,
-		h2,
-		h3,
-		h4
+		].join(',')
 	}
 });
+
+export default responsiveFontSizes(mainTheme);
