@@ -33,7 +33,6 @@ const SongProgress = ({ progress, duration, setProgress, spotifyApi, playing }) 
 		let interval = null;
 		if (playing) {
 			interval = setInterval(() => {
-				console.log('Progress the song');
 				setProgress(progress + 1);
 			}, 1000);
 		} else if (!playing && progress !== 0) {
@@ -54,24 +53,28 @@ const SongProgress = ({ progress, duration, setProgress, spotifyApi, playing }) 
 
 	// 1. Wrapp api call to spotify so we can log the value
 	const apiCall = (v) => {
+		console.log(v);
 		spotifyApi.seek(v * 1000);
 	};
 
 	// 2. Create a callback function that we will send to useMemo();
 	const debouncedApiCall = (v) => {
 		// 3. Return a debounced version of apiCall()
-		return debounce(apiCall, 1000, {
+		console.log(v);
+		return debounce((v) => apiCall(v), 1000, {
 			leading: false,
 			trailing: true
 		});
 	};
 
+	const progressSong = useMemo((v) => debouncedApiCall(v), []);
+
 	// 4. Store the value of our memoized function in a function/variable called progressSong
-	const progressSong = useMemo(debouncedApiCall, []);
 
 	const handleOnChange = (e, v) => {
 		setProgress(v);
 		// 5. Call the memoized function that in turn uses a debounced version of apiCall();
+		console.log(v);
 		progressSong(v);
 	};
 
