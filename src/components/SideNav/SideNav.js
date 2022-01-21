@@ -40,17 +40,17 @@ function SideNav({ items, loading }) {
 					<ListItem disablePadding>
 						<ListItemButton onClick={() => history.push('/')}>
 							<ListItemIcon>
-								<HomeIcon sx={{ color: 'white' }} />
+								<HomeIcon sx={{ color: 'text.secondary' }} />
 							</ListItemIcon>
-							<ListItemText primary="Home" />
+							<ListItemText primary="Home" sx={{ color: 'text.secondary' }} />
 						</ListItemButton>
 					</ListItem>
 					<ListItem disablePadding>
 						<ListItemButton onClick={() => history.push('/search')}>
 							<ListItemIcon>
-								<SearchIcon sx={{ color: 'white' }} />
+								<SearchIcon sx={{ color: 'text.secondary' }} />
 							</ListItemIcon>
-							<ListItemText primary="Search" />
+							<ListItemText primary="Search" sx={{ color: 'text.secondary' }} />
 						</ListItemButton>
 					</ListItem>
 				</List>
