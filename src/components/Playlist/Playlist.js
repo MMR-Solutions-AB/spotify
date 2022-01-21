@@ -1,7 +1,6 @@
-import { Typography, Grid, Box, Fab } from '@mui/material';
+import { Typography, Grid, Box } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import { connect } from 'react-redux';
 import TableOfSongs from '../TableOfSongs/TableOfSongs';
 
@@ -19,11 +18,20 @@ const Playlist = ({ spotifyApi, loading }) => {
 			});
 
 			const allSongs = await spotifyApi.getPlaylistTracks(playlistId);
-			console.log(allSongs.body.items);
-			setSongs(allSongs.body.items);
+			const formattedSongs = formatSongData(allSongs.body.items);
+			setSongs(formattedSongs);
 		};
 		getData();
 	}, [playlistId]);
+
+	const formatSongData = (songsInPlaylist) => {
+		return songsInPlaylist.map((song, i) => {
+			const { track } = song;
+			track.contextUri = `spotify:playlist:${playlistId}`;
+			track.position = i;
+			return { track };
+		});
+	};
 
 	return (
 		<Box
@@ -37,7 +45,11 @@ const Playlist = ({ spotifyApi, loading }) => {
 			{/* Hero */}
 			<Grid container spacing={2} mb={6}>
 				<Grid item xs={12} lg={2}>
-					<img src={playlistInfo ? playlistInfo.image : ''} style={{ width: '100%' }} />
+					<img
+						src={playlistInfo ? playlistInfo.image : ''}
+						style={{ width: '100%' }}
+						alt={playlistInfo ? playlistInfo.name : 'Spotify'}
+					/>
 				</Grid>
 				<Grid
 					item
@@ -53,13 +65,7 @@ const Playlist = ({ spotifyApi, loading }) => {
 					</Typography>
 				</Grid>
 			</Grid>
-			{/* Song list */}
 			<Grid container spacing={2}>
-				<Grid item xs={12} lg={2}>
-					<Fab color="primary" aria-label="add">
-						<PlayArrowIcon sx={{ color: 'text.primary' }} fontSize="large" />
-					</Fab>
-				</Grid>
 				<Grid item xs={12}>
 					<TableOfSongs loading={loading} spotifyApi={spotifyApi} playlistId={playlistId} songs={songs} />
 				</Grid>

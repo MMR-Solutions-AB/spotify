@@ -40,8 +40,7 @@ const Player = ({
 			}
 		} else {
 			pause();
-			const tryToPause = await spotifyApi.pause();
-			console.log({ tryToPause });
+			await spotifyApi.pause();
 		}
 	};
 

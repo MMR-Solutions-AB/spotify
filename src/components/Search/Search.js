@@ -15,8 +15,8 @@ const Search = ({ spotifyApi }) => {
 	const [loading, setLoading] = useState(false);
 
 	const formatSongData = (tracks) => {
-		return tracks.map(({ album, name, artists, duration_ms }) => {
-			return { track: { album, name, artists, duration_ms } };
+		return tracks.map((track) => {
+			return { track: { ...track, contextUri: track.album.uri, position: track.track_number - 1 } };
 		});
 	};
 
@@ -24,6 +24,13 @@ const Search = ({ spotifyApi }) => {
 		e.preventDefault();
 		setLoading(true);
 		const { value } = e.target;
+
+		if (value === '') {
+			setSongs(null);
+			setLoading(false);
+			return;
+		}
+
 		try {
 			const result = await spotifyApi.searchTracks(value);
 			const { items } = result.body.tracks;
@@ -39,18 +46,6 @@ const Search = ({ spotifyApi }) => {
 
 	return (
 		<Box sx={boxStyle}>
-			{/* <Button
-				onClick={() => {
-					spotifyApi.play({
-						context_uri: 'spotify:album:3SpBlxme9WbeQdI9kx7KAV',
-						offset: {
-							position: 5
-						}
-					});
-				}}
-			>
-				play
-			</Button> */}
 			<form
 				onSubmit={(e) => e.preventDefault()}
 				style={{
@@ -78,7 +73,7 @@ const Search = ({ spotifyApi }) => {
 					{songs === null ? (
 						<Typography>Search for Songs</Typography>
 					) : (
-						<TableOfSongs loading={loading} spotifyApi={spotifyApi} playlistId={'asdasd'} songs={songs} />
+						<TableOfSongs loading={loading} spotifyApi={spotifyApi} playlistId={false} songs={songs} />
 					)}
 				</Grid>
 			</Grid>

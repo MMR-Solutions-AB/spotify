@@ -11,6 +11,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import SideNavOption from '../SideNavOption/SideNavOption';
 import { useHistory } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { NavLink } from 'react-router-dom';
 
 function SideNav({ items, loading }) {
 	const history = useHistory();
@@ -18,7 +19,7 @@ function SideNav({ items, loading }) {
 	const renderPlaylists = () => {
 		// Make sure laoding state works
 		if (loading) return 'Loading';
-		return items.map((playlist, i) => <SideNavOption {...playlist} key={i} />);
+		return items.map((playlist, i) => <SideNavOption {...playlist} key={i} to={`/playlist/${playlist.id}`} />);
 	};
 
 	return (
@@ -37,22 +38,8 @@ function SideNav({ items, loading }) {
 			<img style={{ marginLeft: 16, marginTop: 24 }} src="/Spotify_Logo.png" width={130} alt="Spotify" />
 			<Box sx={{ width: '100%', maxWidth: 360, color: 'white' }}>
 				<List>
-					<ListItem disablePadding>
-						<ListItemButton onClick={() => history.push('/')}>
-							<ListItemIcon>
-								<HomeIcon sx={{ color: 'text.secondary' }} />
-							</ListItemIcon>
-							<ListItemText primary="Home" sx={{ color: 'text.secondary' }} />
-						</ListItemButton>
-					</ListItem>
-					<ListItem disablePadding>
-						<ListItemButton onClick={() => history.push('/search')}>
-							<ListItemIcon>
-								<SearchIcon sx={{ color: 'text.secondary' }} />
-							</ListItemIcon>
-							<ListItemText primary="Search" sx={{ color: 'text.secondary' }} />
-						</ListItemButton>
-					</ListItem>
+					<SideNavOption k={100} to={'/'} name="Home" Icon={HomeIcon} />
+					<SideNavOption k={101} to={'/search'} name="Search" Icon={SearchIcon} />
 				</List>
 				<Divider sx={{ color: 'white', bgcolor: 'white' }} variant="middle" />
 				<List>{renderPlaylists()}</List>

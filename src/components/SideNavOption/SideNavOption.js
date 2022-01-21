@@ -1,15 +1,28 @@
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
-import { useHistory } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
+import { useState } from 'react';
+import ListItemIcon from '@mui/material/ListItemIcon';
 
-function SideNavOption({ name, id }) {
-	const history = useHistory();
+function SideNavOption({ name, Icon, to }) {
+	const [isActive, setIsActive] = useState(false);
 
 	return (
 		<ListItem disablePadding>
-			<ListItemButton onClick={() => history.push(`/playlist/${id}`)}>
-				<ListItemText primary={name} sx={{ color: 'text.secondary' }} />
+			<ListItemButton
+				component={NavLink}
+				to={to}
+				isActive={(match) => {
+					setIsActive(!!match && match.isExact);
+				}}
+			>
+				{Icon && (
+					<ListItemIcon>
+						<Icon sx={{ color: isActive ? 'primary.main' : 'text.secondary' }} />
+					</ListItemIcon>
+				)}
+				<ListItemText primary={name} sx={{ color: isActive ? 'primary.main' : 'text.secondary' }} />
 			</ListItemButton>
 		</ListItem>
 	);
