@@ -28,7 +28,7 @@ const Home = ({}) => {
 					</Typography>
 				</Grid>
 				<Grid item xs={8} md={4} lg={3}>
-					<img src="/ta-logo.png" style={{ width: '100%' }} alt="Techover" />
+					<img src="/TA-logo.png" style={{ width: '100%' }} alt="Techover" />
 				</Grid>
 				<Grid item xs={12} style={{ textAlign: 'center' }}>
 					<Button
