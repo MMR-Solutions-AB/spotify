@@ -1,4 +1,4 @@
-import { Box, Grid, Typography } from '@mui/material';
+import { Box, Grid, Typography, Button } from '@mui/material';
 
 const style = {
 	position: 'fixed',
@@ -29,6 +29,16 @@ const Home = ({}) => {
 				</Grid>
 				<Grid item xs={8} md={4} lg={3}>
 					<img src="/ta-logo.png" style={{ width: '100%' }} alt="Techover" />
+				</Grid>
+				<Grid item xs={12} style={{ textAlign: 'center' }}>
+					<Button
+						size="large"
+						variant="contained"
+						color="secondary"
+						onClick={() => (window.location.href = 'https://www.academy.techover.nu/')}
+					>
+						Ansök nu!
+					</Button>
 				</Grid>
 			</Grid>
 		</Box>
