@@ -1,4 +1,4 @@
-import { Box, Grid } from '@mui/material';
+import { Box, Grid, Typography } from '@mui/material';
 
 const style = {
 	position: 'fixed',
@@ -17,10 +17,18 @@ const Home = ({}) => {
 				direction="row"
 				alignItems="center"
 				justifyContent="center"
-				sx={{ height: '100%' }}
+				sx={{ height: 'calc(100% - 105px)' }}
 			>
+				<Grid item xs={12} lg={12} sx={{ textAlign: 'center' }}>
+					<Typography color="text.primary" variant={'h1'} gutterBottom>
+						Spotify Clone
+					</Typography>
+					<Typography color="text.primary" variant={'caption'} mb={6}>
+						powered by
+					</Typography>
+				</Grid>
 				<Grid item xs={8} md={4} lg={3}>
-					<img src="/techover-logo.png" style={{ width: '100%' }} alt="Techover" />
+					<img src="/ta-logo.png" style={{ width: '100%' }} alt="Techover" />
 				</Grid>
 			</Grid>
 		</Box>
