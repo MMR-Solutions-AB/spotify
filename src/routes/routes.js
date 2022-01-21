@@ -1,19 +1,32 @@
-import Products from '../components/screens/Products/Products';
-import Checkout from '../components/screens/Checkout/Checkout';
+import Libary from '../components/Library/Library';
+import Playlist from '../components/Playlist/Playlist';
+import Home from '../components/Home/Home';
+import Search from '../components/Search/Search';
 
 const NoMatch = () => {
 	return <div>404</div>;
-};
-
-const Temporary = () => {
-	return <div>Temporary</div>;
 };
 
 export const ROUTES = [
 	{
 		path: '/',
 		exact: true,
-		component: Temporary
+		component: Home
+	},
+	{
+		path: '/playlist',
+		exact: true,
+		component: Libary
+	},
+	{
+		path: '/playlist/:playlistId',
+		exact: true,
+		component: Playlist
+	},
+	{
+		path: '/search',
+		exact: true,
+		component: Search
 	},
 	{
 		path: '*',
