@@ -4,7 +4,7 @@ const authEndpoint = 'https://accounts.spotify.com/authorize';
 const clientId = '22f2ca0810ca46208e9e789ba4844872';
 const liveUri = 'https://techover-spotify.herokuapp.com/';
 const devUri = 'http://localhost:3000/';
-const redirectUrl = liveUri;
+const redirectUrl = devUri;
 const scopes = [
 	'user-read-currently-playing',
 	'user-read-recently-played',

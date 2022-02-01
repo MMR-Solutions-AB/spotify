@@ -51,21 +51,19 @@ const setupSpotifyConnect = (token, addDevice) => {
 
 const ScreenRoot = ({ token, fetchUser, fetchPlaylist, addDevice }) => {
 	useEffect(() => {
-		// Set up spotify:
-		spotifyApi.setAccessToken(token);
-
-		window.onSpotifyWebPlaybackSDKReady = () => {
-			setupSpotifyConnect(token, addDevice);
-		};
-
 		const getData = async () => {
+			await spotifyApi.setAccessToken(token);
 			fetchUser(spotifyApi);
 			fetchPlaylist(spotifyApi);
 			const devices = await spotifyApi.getMyDevices();
 			console.log(devices.body);
 		};
-
-		if (token) getData();
+		if (token) {
+			window.onSpotifyWebPlaybackSDKReady = () => {
+				setupSpotifyConnect(token, addDevice);
+			};
+			getData();
+		}
 	}, [token, fetchUser]);
 
 	const LogedIn = () => (
@@ -83,7 +81,7 @@ const ScreenRoot = ({ token, fetchUser, fetchPlaylist, addDevice }) => {
 				</Switch>
 				<SideNav />
 			</Box>
-			<Player spotifyApi={spotifyApi} />
+			{/* <Player spotifyApi={spotifyApi} /> */}
 			<MobileNav />
 		</Router>
 	);
