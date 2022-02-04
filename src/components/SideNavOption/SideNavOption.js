@@ -1,9 +1,6 @@
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemText from '@mui/material/ListItemText';
 import { NavLink } from 'react-router-dom';
 import { useState } from 'react';
-import ListItemIcon from '@mui/material/ListItemIcon';
+import { ListItemIcon, ListItem, ListItemButton, ListItemText } from '@mui/material';
 
 function SideNavOption({ name, Icon, to }) {
 	const [isActive, setIsActive] = useState(false);
