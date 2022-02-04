@@ -8,9 +8,7 @@ function SideNavOption({ name, Icon, to }) {
 				component={NavLink}
 				to={to}
 				isActive={(match) => !!match && match.isExact}
-				activeStyle={{
-					color: '#1db954'
-				}}
+				activeStyle={{ color: '#1db954' }}
 			>
 				{Icon && (
 					<ListItemIcon>

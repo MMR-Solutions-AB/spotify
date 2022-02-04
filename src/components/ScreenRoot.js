@@ -1,7 +1,6 @@
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import { Box } from '@mui/material';
 import { useEffect, useState } from 'react';
-import SpotifyWebApi from 'spotify-web-api-node';
 import { connect } from 'react-redux';
 import { ROUTES } from '../routes/routes';
 import SideNav from './SideNav/SideNav';
@@ -10,9 +9,7 @@ import Player from './Player/Player';
 import Login from './Login/Login';
 import { fetchUser, fetchPlaylist, addDevice } from '../reduxStore/actions/index';
 
-const spotifyApi = new SpotifyWebApi();
-
-const setupSpotifyConnect = (token, addDevice) => {
+const setupSpotifyConnect = (token, addDevice, spotifyApi) => {
 	const player = new window.Spotify.Player({
 		name: 'Web Playback SDK Quick Start Player',
 		getOAuthToken: (cb) => {
@@ -47,16 +44,15 @@ const setupSpotifyConnect = (token, addDevice) => {
 	player.connect();
 };
 
-const ScreenRoot = ({ token, fetchUser, fetchPlaylist, addDevice }) => {
+const ScreenRoot = ({ spotifyApi, token, fetchUser, fetchPlaylist, addDevice }) => {
 	useEffect(() => {
 		const getData = async () => {
-			await spotifyApi.setAccessToken(token);
 			fetchUser(spotifyApi);
 			fetchPlaylist(spotifyApi);
 		};
 		if (token) {
 			window.onSpotifyWebPlaybackSDKReady = () => {
-				setupSpotifyConnect(token, addDevice);
+				setupSpotifyConnect(token, addDevice, spotifyApi);
 			};
 			getData();
 		}

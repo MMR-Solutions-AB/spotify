@@ -1,10 +1,10 @@
 import './App.css';
 import ScreenRoot from '../ScreenRoot';
 
-function App() {
+function App({ spotifyApi }) {
 	return (
 		<div className="App">
-			<ScreenRoot />
+			<ScreenRoot spotifyApi={spotifyApi} />
 		</div>
 	);
 }

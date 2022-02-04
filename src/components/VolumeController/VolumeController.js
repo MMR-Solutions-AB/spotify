@@ -2,8 +2,6 @@ import { Box, Stack, Slider } from '@mui/material';
 import { VolumeDown, VolumeUp, VolumeOff } from '@mui/icons-material';
 import { useState, useMemo, useEffect } from 'react';
 import debounce from 'lodash.debounce';
-import throttle from 'lodash.throttle';
-import { setProgress } from '../../reduxStore/actions';
 
 const VolumeController = ({ spotifyApi }) => {
 	const defaultVolume = 40;
@@ -28,7 +26,6 @@ const VolumeController = ({ spotifyApi }) => {
 	const changeVolume = useMemo(debouncedApiCall, []);
 
 	useEffect(() => {
-		spotifyApi.setVolume(defaultVolume);
 		return () => {
 			changeVolume.cancel();
 		};

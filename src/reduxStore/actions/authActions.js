@@ -16,11 +16,12 @@ export const fetchTokenSuccess = (data) => {
 	};
 };
 
-export const fetchToken = () => {
+export const fetchToken = (spotifyApi) => {
 	return async (dispatch) => {
 		dispatch(fetchTokenStart());
 		try {
 			const token = getAccessToken();
+			await spotifyApi.setAccessToken(token);
 			dispatch(fetchTokenSuccess(token));
 		} catch (error) {
 			dispatch(fetchTokenFail(error));
