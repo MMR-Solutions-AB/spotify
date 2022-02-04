@@ -23,9 +23,7 @@ const setupSpotifyConnect = (token, addDevice) => {
 
 	// Ready
 	player.addListener('ready', ({ device_id }) => {
-		console.log('Ready with Device ID', device_id);
 		addDevice(device_id);
-
 		spotifyApi.transferMyPlayback([device_id]);
 	});
 
@@ -55,8 +53,6 @@ const ScreenRoot = ({ token, fetchUser, fetchPlaylist, addDevice }) => {
 			await spotifyApi.setAccessToken(token);
 			fetchUser(spotifyApi);
 			fetchPlaylist(spotifyApi);
-			const devices = await spotifyApi.getMyDevices();
-			console.log(devices.body);
 		};
 		if (token) {
 			window.onSpotifyWebPlaybackSDKReady = () => {
