@@ -81,7 +81,7 @@ const ScreenRoot = ({ token, fetchUser, fetchPlaylist, addDevice }) => {
 				</Switch>
 				<SideNav />
 			</Box>
-			{/* <Player spotifyApi={spotifyApi} /> */}
+			<Player spotifyApi={spotifyApi} />
 			<MobileNav />
 		</Router>
 	);
